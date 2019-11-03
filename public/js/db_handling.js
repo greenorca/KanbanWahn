@@ -157,26 +157,28 @@ function saveItem(){
   }
 }
 
-function loadItems(){
-  ["todo-tasks","inprogress-tasks","done-tasks"].forEach(function(tid){
-    var node = document.getElementById(tid);
-      if (node){
-        //console.log("starting cleanup "+tid);
-        while (node.hasChildNodes()){
-          node.removeChild(node.lastChild);
-        }
-        //console.log("finished cleanup "+tid);
-      }
-  });
-  if (firebase.auth().currentUser){
-    db.collection("items").where('user','==',firebase.auth().currentUser.uid)
-      /*.where('last_change','<=', Date.now())*/
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          console.log(`${doc.id} => ${doc.data().headline}`);
-          insertTaskItem(doc);
+function loadItemsForState(state){
+  var node = document.getElementById(state+"-tasks");
+  if (node){
+    while (node.hasChildNodes()){
+      node.removeChild(node.lastChild);
+    }
+  }
+  db.collection("items").where('user','==',firebase.auth().currentUser.uid)
+    .where('state','==', state)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${doc.data().headline}`);
+        insertTaskItem(doc);
       });
+  });
+}
+
+function loadItems(){
+  if (firebase.auth().currentUser){
+    ["todo","inprogress","done"].forEach(function(state){
+      loadItemsForState(state);
     });
   }
 }
@@ -242,7 +244,7 @@ function dropFunction(ev){
     var node = document.getElementById("imdragged");
     console.log("Received element" + node);
     var targetNode = event.target;
-    var validDropIds = ["todo-tasks", "inprogress-tasks", "done-tasks"];
+    var validDropIds = ["todo-tasks", "inprogress-tasks", "done-tasks", "long-done-tasks"];
     while (validDropIds.indexOf(targetNode.id) < 0){
       targetNode = targetNode.parentNode;
     }
@@ -274,7 +276,7 @@ function touchEnd(){
   var changedTouch = event.changedTouches[0];
   var targetNode = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
 
-  var validDropIds = ["todo-tasks", "inprogress-tasks", "done-tasks"];
+  var validDropIds = ["todo-tasks", "inprogress-tasks", "done-tasks","long-done-tasks"];
   while (validDropIds.indexOf(targetNode.id) < 0){
     targetNode = targetNode.parentNode;
   }
@@ -310,29 +312,23 @@ window.addEventListener("load",function(){
     cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
   });
 
-  db.enablePersistence()
+  db.enablePersistence();
 
-  document.getElementById('todo-tasks').addEventListener('drop', function(){
-    dropFunction(event);}
-    , false);
-  document.getElementById('todo-tasks').addEventListener('dragover', function(){
-    dragOverFunction(event);}
-    , false);
-  document.getElementById('todo-tasks').addEventListener('touchend', touchEnd);
+  //setup event listeners for drop-targets
+  var dropElements = document.getElementsByClassName('kanban-tasklist');
+  for (var i=0; i < dropElements.length; i++){
+    var elem =dropElements[i];
+    elem.addEventListener('drop', function(){
+        dropFunction(event);
+      }, false);
+    elem.addEventListener('dragover', function(){
+        dragOverFunction(event);
+      }, false);
+    elem.addEventListener('touchend', touchEnd);
+  }
 
-  document.getElementById('inprogress-tasks').addEventListener('drop', function(){
-    dropFunction(event);}
-    , false);
-  document.getElementById('inprogress-tasks').addEventListener('dragover', function(){
-    dragOverFunction(event);}
-    , false);
-  document.getElementById('inprogress-tasks').addEventListener('touchend', touchEnd);
+  document.getElementById('load-btn').addEventListener('click', function(){
+    loadItemsForState("long-done");
+  });
 
-  document.getElementById('done-tasks').addEventListener('drop', function(){
-  dropFunction(event);}
-  , false);
-  document.getElementById('done-tasks').addEventListener('dragover', function(){
-    dragOverFunction(event);}
-    , false);
-  document.getElementById('done-tasks').addEventListener('touchend', touchEnd);
 });

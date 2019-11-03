@@ -4,6 +4,7 @@
 
 ## Setup:
 
+* create your own firebase app ([https://firebase.google.com/](https://firebase.google.com/))
 * add a new file `apikey.js` into `public/js`
 * add your own Firebase-credentials
 
@@ -19,3 +20,4 @@ const firebaseConfig = {
   measurementId: "yours..."
 };
 ```
+
