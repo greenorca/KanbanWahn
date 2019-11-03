@@ -87,6 +87,13 @@ li a {
   background-color: #55FF55;
 }
 
+#load-btn{
+  background-color: #CCC;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: xx-large;
+}
+
 #dialog {
   position: fixed; /* Sit on top of the page content */
   display: block; /* Hidden by default */

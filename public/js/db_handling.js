@@ -75,10 +75,29 @@ function openEditView(doc){
     document.getElementById('dialog').remove();
   });
   btn_bar.append(btn_save);
-
   dialog.append(btn_bar);
 
   document.body.append(dialog);
+
+}
+
+function handleDialogKeyPress(){
+  if (document.getElementById('dialog')){
+    if(event.ctrlKey && event.keyCode == 's'){
+      //save
+      saveItem();
+      document.getElementById('dialog').remove();
+    }
+    else {
+      if (event.keyCode == 27){ //ESC
+        var items = document.getElementsByClassName('is-edit-item');
+        for (var i=0; i < items.length; i++){
+          items[i].classList.remove('is-edit-item');
+        };
+        document.getElementById('dialog').remove();
+      }
+    }
+  }
 }
 
 function makeDialogButton(btnName, btnFun){
@@ -330,5 +349,9 @@ window.addEventListener("load",function(){
   document.getElementById('load-btn').addEventListener('click', function(){
     loadItemsForState("long-done");
   });
+
+  // add CTRL+S and ESC shortcuts
+  document.addEventListener('keyup', handleDialogKeyPress);
+
 
 });
