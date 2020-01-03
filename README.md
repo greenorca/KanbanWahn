@@ -1,6 +1,7 @@
 # Kanban-Wahn
 
 * a simple Firebase-based WebApp for Todo-lists
+* somewhat mobile friendly :P
 
 ## Setup:
 
@@ -20,4 +21,6 @@ const firebaseConfig = {
   measurementId: "yours..."
 };
 ```
+## Screenshot
 
+![MyKanban-Wahn.png](MyKanban-Wahn.png)
