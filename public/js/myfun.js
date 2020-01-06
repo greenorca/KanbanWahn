@@ -8,6 +8,7 @@ function getItems(){
  * Handles the sign in button press.
  */
 function toggleSignIn() {
+  event.preventDefault();
   if (firebase.auth().currentUser) {
     // [START signout]
     firebase.auth().signOut();

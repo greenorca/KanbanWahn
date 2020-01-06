@@ -74,6 +74,7 @@ function openEditView(doc){
     saveItem();
     document.getElementById('dialog').remove();
   });
+
   btn_bar.append(btn_save);
   dialog.append(btn_bar);
 
@@ -223,7 +224,12 @@ function insertTaskItem(doc){
   }
 
   if (doc.data().state){
-    document.getElementById(doc.data().state+"-tasks").append(card);
+    var target_id =doc.data().state+"-tasks";
+    if (doc.data().state == "done" && (Date.now() - doc.data().lastUpdate)/(3600*24*1000) > 20 ){
+      target_id = "long-done-tasks"
+    }
+
+    document.getElementById(target_id).append(card);
     card.draggable = "true";
     card.addEventListener("click", function(){
       editItem();
@@ -347,7 +353,9 @@ window.addEventListener("load",function(){
   }
 
   document.getElementById('load-btn').addEventListener('click', function(){
-    loadItemsForState("long-done");
+    //loadItemsForState("long-done");
+    var div = document.getElementById('long-done-tasks');
+    div.style.display = div.style.display == "none" ? "block" : "none";
   });
 
   // add CTRL+S and ESC shortcuts
