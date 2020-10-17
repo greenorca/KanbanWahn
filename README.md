@@ -21,6 +21,11 @@ const firebaseConfig = {
   measurementId: "yours..."
 };
 ```
+## Development
+
+* to push local changes, run `firebase deploy` from project root directory
+* `firebase login --reauth` helps sometimes
+
 ## Screenshot
 
 ![MyKanban-Wahn.png](MyKanban-Wahn.png)
