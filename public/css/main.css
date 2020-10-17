@@ -216,7 +216,12 @@ h3 {
     width: 90%; /* Full width (cover the whole page) */
     left: 0px;
     right: 0px;
+    height: 90%;
+    overflow-y: scroll;
     z-index: 1000;
+    position: absolute;
+    top: 10px;
+
   }
 
   #dialog label{
@@ -233,8 +238,9 @@ h3 {
 
   #dialog button{
     margin: 0 0 5px 5px;
-    display: inline;
+    display: inline-block;
     width: calc(33% - 5px);
+    float: initial;
   }
 
   button{
@@ -243,9 +249,11 @@ h3 {
   }
 
   .buttonbar{
-    width: 95%;
+    width: 100%;
     left: 5%;
     right: 5%;
+    position: initial;
+    bottom: initial;
   }
 
   .task-description{
